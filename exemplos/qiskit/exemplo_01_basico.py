@@ -7,6 +7,8 @@ from qiskit import QuantumCircuit
 from qiskit_aer import Aer
 from qiskit.visualization import plot_histogram
 import matplotlib.pyplot as plt
+import os
+import tempfile
 
 # Criar um circuito quântico com 1 qubit e 1 bit clássico
 qc = QuantumCircuit(1, 1)
@@ -34,8 +36,9 @@ print(counts)
 # Plotar histograma
 plot_histogram(counts)
 plt.title('Distribuição de Medições - Superposição')
-plt.savefig('/tmp/exemplo_01_histogram.png')
-print("\nHistograma salvo em /tmp/exemplo_01_histogram.png")
+output_path = os.path.join(tempfile.gettempdir(), 'exemplo_01_histogram.png')
+plt.savefig(output_path)
+print(f"\nHistograma salvo em {output_path}")
 
 # Explicação
 print("\n=== EXPLICAÇÃO ===")

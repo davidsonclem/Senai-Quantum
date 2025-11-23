@@ -68,7 +68,7 @@ Após estudar estes exemplos, você será capaz de:
 Os exemplos geram:
 - Representação textual dos circuitos
 - Contagens de medições
-- Histogramas (salvos em `/tmp/`)
+- Histogramas (salvos no diretório temporário do sistema)
 - Explicações detalhadas dos resultados
 
 ## 🔍 Próximos Passos
@@ -92,7 +92,7 @@ Após dominar estes exemplos, você pode:
 - Os exemplos usam simuladores locais (sem ruído)
 - Resultados em hardware real podem diferir devido ao ruído
 - Para executar em hardware real, é necessário criar conta IBM Quantum
-- Os histogramas são salvos no diretório `/tmp/`
+- Os histogramas são salvos no diretório temporário do sistema
 
 ## 🤝 Contribuindo
 

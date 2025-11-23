@@ -7,6 +7,8 @@ from qiskit import QuantumCircuit
 from qiskit_aer import Aer
 from qiskit.visualization import plot_histogram
 import matplotlib.pyplot as plt
+import os
+import tempfile
 
 # Criar circuito com 2 qubits e 2 bits clássicos
 qc = QuantumCircuit(2, 2)
@@ -40,8 +42,9 @@ print(counts)
 # Plotar
 plot_histogram(counts)
 plt.title('Estado de Bell - Qubits Emaranhados')
-plt.savefig('/tmp/exemplo_02_histogram.png')
-print("\nHistograma salvo em /tmp/exemplo_02_histogram.png")
+output_path = os.path.join(tempfile.gettempdir(), 'exemplo_02_histogram.png')
+plt.savefig(output_path)
+print(f"\nHistograma salvo em {output_path}")
 
 # Explicação
 print("\n=== EXPLICAÇÃO ===")

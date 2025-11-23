@@ -8,13 +8,15 @@ from qiskit_aer import Aer
 from qiskit.visualization import plot_histogram
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import tempfile
 
 def grover_oracle(qc, target):
     """
     Oráculo que marca o estado alvo.
     Para 2 qubits, target pode ser '00', '01', '10', ou '11'.
     """
-    # Converter string binária para lista de bits
+    # Implementar oráculo baseado no estado alvo
     if target == '00':
         qc.cz(0, 1)
         qc.x([0, 1])
@@ -105,8 +107,9 @@ for state in sorted(counts.keys()):
 # Plotar
 plot_histogram(counts)
 plt.title(f'Algoritmo de Grover - Buscando |{target}⟩')
-plt.savefig('/tmp/exemplo_04_histogram.png')
-print("\nHistograma salvo em /tmp/exemplo_04_histogram.png")
+output_path = os.path.join(tempfile.gettempdir(), 'exemplo_04_histogram.png')
+plt.savefig(output_path)
+print(f"\nHistograma salvo em {output_path}")
 
 # Explicação
 print("\n=== EXPLICAÇÃO ===")
