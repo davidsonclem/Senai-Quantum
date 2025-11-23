@@ -1,0 +1,21 @@
+# Dependências para exemplos de Computação Quântica
+
+# Framework principal de computação quântica
+qiskit>=0.45.0
+
+# Simuladores e backends
+qiskit-aer>=0.13.0
+
+# Visualização
+matplotlib>=3.7.0
+
+# Computação numérica
+numpy>=1.24.0
+
+# Jupyter notebooks (opcional, para experimentação interativa)
+jupyter>=1.0.0
+notebook>=7.0.0
+
+# Ferramentas adicionais (opcional)
+# pylatexenc>=2.10  # Para renderização de circuitos em LaTeX
+# qiskit-ibm-runtime>=0.15.0  # Para executar em hardware IBM real
