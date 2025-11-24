@@ -182,4 +182,6 @@ Este projeto foi desenvolvido para fins acadêmicos na Universidade SENAI CIMATE
 
 ## 📧 Contato
 
-Para dúvidas ou sugestões sobre este projeto, entre em contato com Davidson Clem - https://www.linkedin.com/in/davidson-clem/.
+**Davidson Clem**  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Davidson_Clem-blue?logo=linkedin)](https://www.linkedin.com/in/davidson-clem/)
+
