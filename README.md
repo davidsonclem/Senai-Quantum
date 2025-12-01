@@ -2,7 +2,7 @@
 
 # 🌌 Specialization in Quantum Computing
 
-### SENAI CIMATEC | Class 98895 | 2025-2026
+### SENAI CIMATEC | 2025-2026
 
 [![Quantum Computing](https://img.shields.io/badge/Quantum-Computing-blueviolet?style=flat&logo=ibm&logoColor=white)](https://github.com/davidsonclem/senai-quantum)
 [![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
