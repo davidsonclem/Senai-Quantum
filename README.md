@@ -9,7 +9,7 @@
 [![Qiskit](https://img.shields.io/badge/-Qiskit-6929C4?style=flat&logo=qiskit&logoColor=white)](https://qiskit.org/)
 [![Status](https://img.shields.io/badge/Status-In_Progress-yellow?style=flat)]()
 
-[🇧🇷 Portuguese](README.md) | [🇺🇸 English](README.en.md)
+[🇧🇷 Portuguese](README_pt.md) 
 
 </div>
 
