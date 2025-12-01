@@ -2,14 +2,14 @@
 
 # 🌌 Especialização em Computação Quântica
 
-### SENAI CIMATEC | Turma 98895 | 2025-2026
+### SENAI CIMATEC | 2025-2026
 
 [![Quantum Computing](https://img.shields.io/badge/Quantum-Computing-blueviolet?style=flat&logo=ibm&logoColor=white)](https://github.com/davidsonclem/senai-quantum)
 [![Python](https://img.shields.io/badge/-Python-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![Qiskit](https://img.shields.io/badge/-Qiskit-6929C4?style=flat&logo=qiskit&logoColor=white)](https://qiskit.org/)
 [![Status](https://img.shields.io/badge/Status-Em_Andamento-yellow?style=flat)]()
 
-[🇧🇷 Portuguese](README_pt.md) | [🇺🇸 English](README.en.md)
+ [🇺🇸 English](README.en.md)
 
 </div>
 
