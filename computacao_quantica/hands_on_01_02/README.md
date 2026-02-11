@@ -14,8 +14,8 @@ Este repositório contém os artefatos, códigos e análises desenvolvidos duran
 - **Instituição:** Universidade SENAI CIMATEC
 - **Curso:** Especialização em Computação Quântica
 - **Disciplina:** Fundamentos da Computação Quântica
-- **Professor:** Dr. Otto Menegasso Pires
-- **Data da Entrega:** 24/11/2025
+- **Professor:**  Leticia Bertuzzi
+- **Data da Entrega:** 10/02/2026
 
 ---
 
@@ -24,9 +24,9 @@ Este repositório contém os artefatos, códigos e análises desenvolvidos duran
 | Membro | Função |
 |:---|:---|
 | **Davidson Clem** | Desenvolvimento, Documentação, Análise e Testes|
-| **João Filipe Muchanga** | Desenvolvimento e Análise |
-| **José Hidalgo Suárez** | Desenvolvimento e Testes |
-| **Wild Freitas da Silva Santos** | Desenvolvimento e Revisão |
+| **Gabriel Augusto David** | Desenvolvimento e Análise |
+| **Enderson** | Testes |
+
 
 ---
 
