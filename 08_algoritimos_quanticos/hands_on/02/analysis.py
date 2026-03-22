@@ -4,6 +4,30 @@
 # =============================================================================
 
 
+def sanitize_route(route) -> list[int]:
+    """Garante que a rota é uma lista plana de inteiros.
+
+    O tsp.interpret() pode retornar listas aninhadas ou valores inválidos
+    quando o QAOA não converge para uma solução viável. Esta função
+    filtra e achata o resultado para evitar erros nas funções de plot.
+
+    Args:
+        route: Saída bruta de tsp.interpret().
+
+    Returns:
+        Lista plana de inteiros, ou lista vazia se a rota for inválida.
+    """
+    if not route:
+        return []
+    flat = []
+    for item in route:
+        if isinstance(item, (list, tuple)):
+            flat.extend([int(x) for x in item if isinstance(x, (int, float))])
+        elif isinstance(item, (int, float)):
+            flat.append(int(item))
+    return flat
+
+
 def _route_str(route: list[int]) -> str:
     """Formata a rota como string cíclica legível."""
     return " → ".join(map(str, route + [route[0]])) if route else "N/A"
