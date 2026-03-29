@@ -1,19 +1,16 @@
 # =============================================================================
 # UNIVERSIDADE SENAI CIMATEC — Hands-On 02: QAOA para TSP
-# solvers.py — Versão Otimizada para Google Colab (AerSampler + MPS)
+# solvers.py — Versão Final Ajustada para Google Colab (Qiskit 1.x/2.0)
 # =============================================================================
 
 import time
 import numpy as np
-#from qiskit_aer.primitives import Sampler as AerSampler  # Otimizado para RAM
-from qiskit.primitives import Sampler  # Primitiva padrão Colab
-from qiskit_aer import AerSimulator
+from qiskit_aer.primitives import Sampler as AerSampler  # Primitiva otimizada
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_optimization.algorithms import MinimumEigenOptimizer
 from qiskit_optimization.converters import QuadraticProgramToQubo
 from qiskit_algorithms import QAOA, NumPyMinimumEigensolver
 from qiskit_algorithms.optimizers import COBYLA
-
 
 from config import QAOA_REPS, QAOA_MAXITER
 
@@ -27,8 +24,10 @@ def create_xy_mixer(n_qubits):
     """
     Cria um Mixer XY (Parity-Preserving).
     Implementa a soma de operadores (XX + YY) entre qubits vizinhos lineares.
+    Ajuda a manter o peso de Hamming (número de arestas ligadas).
     """
     ops = []
+    # Conectividade linear para o mixer (i -> i+1)
     for i in range(n_qubits - 1):
         # Termo XX
         x_list = ["I"] * n_qubits
@@ -53,30 +52,32 @@ def solve_classical(qp):
     return result, time.time() - t0
 
 def solve_qaoa(qp, reps: int = QAOA_REPS, maxiter: int = QAOA_MAXITER):
-    qubo = _to_qubo(qp)
-    n_qubits = qubo.get_num_vars()
+    """
+    Resolve o TSP usando QAOA com Mixer XY e AerSampler.
+    Ajustado para evitar erros de 'Invalid circuits' e estouro de memória.
+    """
+    qubo      = _to_qubo(qp)
+    n_qubits  = qubo.get_num_vars() 
     
-    # Configura o backend Aer explicitamente
-    # O método 'statevector' é mais rápido para n < 15 e mais estável que o MPS em instâncias pequenas
-    backend = AerSimulator(method='statevector')
+    # 1. Usar AerSampler com backend explícito (Statevector)
+    # O método 'statevector' é o mais estável para até 15 qubits no Colab
+    sampler = AerSampler(run_options={"method": "statevector", "shots": 1024})
     
-    # Criamos o Sampler vinculado ao backend Aer
-    sampler = Sampler() 
-    
+    # 2. Configurar o otimizador clássico
     optimizer = COBYLA(maxiter=maxiter)
+    
+    # 3. Criar o Mixer XY customizado
     mixer_op = create_xy_mixer(n_qubits)
     
-    # Inicializa o QAOA
-    # Removido o sampler do construtor se houver conflito, 
-    # ou garantido o uso da primitiva padrão.
+    # 4. Configurar o QAOA com o Sampler do Aer
     qaoa = QAOA(sampler=sampler, 
                 optimizer=optimizer, 
                 reps=reps, 
                 mixer=mixer_op)
     
+    # 5. Resolver via Optimization Wrapper
     solver = MinimumEigenOptimizer(qaoa)
-    
-    t0 = time.time()
-    # O solver do Qiskit Optimization lida com a execução
+
+    t0     = time.time()
     result = solver.solve(qubo)
     return result, time.time() - t0
