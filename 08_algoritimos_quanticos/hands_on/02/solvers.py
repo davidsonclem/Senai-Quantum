@@ -5,12 +5,15 @@
 
 import time
 import numpy as np
-from qiskit_aer.primitives import Sampler as AerSampler  # Otimizado para RAM
+#from qiskit_aer.primitives import Sampler as AerSampler  # Otimizado para RAM
+from qiskit.primitives import Sampler  # Primitiva padrão Colab
+from qiskit_aer import AerSimulator
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_optimization.algorithms import MinimumEigenOptimizer
 from qiskit_optimization.converters import QuadraticProgramToQubo
 from qiskit_algorithms import QAOA, NumPyMinimumEigensolver
 from qiskit_algorithms.optimizers import COBYLA
+
 
 from config import QAOA_REPS, QAOA_MAXITER
 
@@ -51,22 +54,29 @@ def solve_classical(qp):
 
 def solve_qaoa(qp, reps: int = QAOA_REPS, maxiter: int = QAOA_MAXITER):
     qubo = _to_qubo(qp)
+    n_qubits = qubo.get_num_vars()
     
-    # Usando o Sampler padrão do Aer para maior estabilidade no Colab
-    from qiskit_aer.primitives import Sampler as AerSampler
-    sampler = AerSampler() 
+    # Configura o backend Aer explicitamente
+    # O método 'statevector' é mais rápido para n < 15 e mais estável que o MPS em instâncias pequenas
+    backend = AerSimulator(method='statevector')
+    
+    # Criamos o Sampler vinculado ao backend Aer
+    sampler = Sampler() 
     
     optimizer = COBYLA(maxiter=maxiter)
+    mixer_op = create_xy_mixer(n_qubits)
     
-    # TESTE DE ESTABILIDADE: Comente o Mixer XY e use o padrão (None)
-    # mixer_op = create_xy_mixer(n_qubits)
-    
+    # Inicializa o QAOA
+    # Removido o sampler do construtor se houver conflito, 
+    # ou garantido o uso da primitiva padrão.
     qaoa = QAOA(sampler=sampler, 
                 optimizer=optimizer, 
                 reps=reps, 
-                mixer=None) # Mixer padrão X
+                mixer=mixer_op)
     
     solver = MinimumEigenOptimizer(qaoa)
+    
     t0 = time.time()
+    # O solver do Qiskit Optimization lida com a execução
     result = solver.solve(qubo)
     return result, time.time() - t0
