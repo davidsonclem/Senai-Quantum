@@ -56,7 +56,7 @@ INSTANCES = {
 }
 
 # Instância padrão usada no notebook (enunciado pede 4 cidades)
-DEFAULT_INSTANCE = "4c"
+DEFAULT_INSTANCE = "3c"
 
 # =============================================================================
 # SUGESTÕES PARA ACELERAR A EXECUÇÃO (apenas sugestões — não alteram o código)

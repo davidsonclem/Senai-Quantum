@@ -50,26 +50,23 @@ def solve_classical(qp):
     return result, time.time() - t0
 
 def solve_qaoa(qp, reps: int = QAOA_REPS, maxiter: int = QAOA_MAXITER):
-    """
-    Resolve o TSP usando QAOA com Mixer XY e AerSampler (Otimizado).
-    O método 'matrix_product_state' evita o estouro de memória no Colab.
-    """
-    qubo      = _to_qubo(qp)
-    n_qubits  = qubo.get_num_vars() 
+    qubo = _to_qubo(qp)
     
-    # AJUSTE PARA COLAB: Usando AerSampler com compressão de estado (MPS)
-    sampler = AerSampler(run_options={"method": "matrix_product_state"})
+    # Usando o Sampler padrão do Aer para maior estabilidade no Colab
+    from qiskit_aer.primitives import Sampler as AerSampler
+    sampler = AerSampler() 
     
     optimizer = COBYLA(maxiter=maxiter)
-    mixer_op  = create_xy_mixer(n_qubits)
     
-    qaoa      = QAOA(sampler=sampler, 
-                     optimizer=optimizer, 
-                     reps=reps, 
-                     mixer=mixer_op)
+    # TESTE DE ESTABILIDADE: Comente o Mixer XY e use o padrão (None)
+    # mixer_op = create_xy_mixer(n_qubits)
     
-    solver    = MinimumEigenOptimizer(qaoa)
-
-    t0     = time.time()
+    qaoa = QAOA(sampler=sampler, 
+                optimizer=optimizer, 
+                reps=reps, 
+                mixer=None) # Mixer padrão X
+    
+    solver = MinimumEigenOptimizer(qaoa)
+    t0 = time.time()
     result = solver.solve(qubo)
     return result, time.time() - t0
