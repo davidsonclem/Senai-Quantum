@@ -32,7 +32,7 @@ def _route_str(route: list[int]) -> str:
     """Formata a rota como string cíclica legível."""
     return " → ".join(map(str, route + [route[0]])) if route else "N/A"
 
-'''
+
 def _routes_equivalent(r1: list[int], r2: list[int]) -> bool:
     """Verifica se duas rotas são equivalentes (mesmas arestas, sentidos opostos aceitos).
 
@@ -43,15 +43,6 @@ def _routes_equivalent(r1: list[int], r2: list[int]) -> bool:
     Returns:
         True se as rotas percorrem o mesmo conjunto de arestas.
     """
-    edges1 = set(zip(r1, r1[1:] + [r1[0]]))
-    edges2 = set(zip(r2, r2[1:] + [r2[0]]))
-    return edges1 == edges2 or edges1 == {(b, a) for a, b in edges2} '''
-
-def _routes_equivalent(r1: list[int], r2: list[int]) -> bool:
-    """Verifica se duas rotas são equivalentes, tratando listas vazias."""
-    if not r1 or not r2:
-        return False  # Se uma delas é vazia, não são equivalentes
-        
     edges1 = set(zip(r1, r1[1:] + [r1[0]]))
     edges2 = set(zip(r2, r2[1:] + [r2[0]]))
     return edges1 == edges2 or edges1 == {(b, a) for a, b in edges2}

@@ -9,18 +9,39 @@
 
 
 # ----------------------------------------------------------------------------
-# CÉLULA 1 — Instalação de dependências
-# Execute apenas uma vez. Comente nas execuções seguintes.
+# CÉLULA 1 — Instalação de dependências (segura/opt-in)
+# A instalação automática foi desativada por padrão porque, em distribuições
+# Linux modernas com gerenciadores de pacotes (ex.: apt/dnf), executar pip
+# globalmente pode causar o erro "externally-managed-environment".
+#
+# Se você realmente quer permitir a instalação automática, defina a variável
+# de ambiente AUTO_INSTALL=1 antes de executar o script (recomendado apenas
+# dentro de um virtualenv). Caso contrário, instale manualmente conforme
+# instruções exibidas abaixo.
 # ----------------------------------------------------------------------------
+import os
 import subprocess, sys
 
-subprocess.check_call([
-    sys.executable, "-m", "pip", "install", "-q",
-    "qiskit", "qiskit-aer", "qiskit-optimization",
-    "qiskit-algorithms", "docplex", "networkx",
-    "matplotlib", "reportlab",
-])
-print("✔ Dependências instaladas.")
+if os.environ.get("AUTO_INSTALL") == "1":
+    try:
+        subprocess.check_call([
+            sys.executable, "-m", "pip", "install", "-q",
+            "qiskit", "qiskit-aer", "qiskit-optimization",
+            "qiskit-algorithms", "docplex", "networkx",
+            "matplotlib", "reportlab",
+        ])
+        print("✔ Dependências instaladas.")
+    except FileNotFoundError:
+        print("❌ Interpreter não encontrado: verifique o comando Python.\n"
+              "    Use um intérprete Python 3, ex.: python3 -m pip install ...")
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Erro ao instalar dependências: {e}")
+else:
+    print("⚠️  Instalação automática desativada.")
+    print("Para instalar manualmente (recomendado em um virtualenv), execute:")
+    print("    python3 -m pip install qiskit qiskit-aer qiskit-optimization qiskit-algorithms docplex networkx matplotlib reportlab")
+    print("Ou, para habilitar temporariamente a instalação automática dentro do venv:")
+    print("    AUTO_INSTALL=1 python3 notebook_refatorado.py")
 
 
 # ----------------------------------------------------------------------------
