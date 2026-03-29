@@ -1,54 +1,75 @@
 # =============================================================================
 # UNIVERSIDADE SENAI CIMATEC — Hands-On 02: QAOA para TSP
-# solvers.py — Solvers clássico (NumPy) e quântico (QAOA)
+# solvers.py — Solvers atualizados com Mixer XY para preservação de Hamming
 # =============================================================================
 
 import time
+import numpy as np
 from qiskit.primitives import StatevectorSampler
+from qiskit.quantum_info import SparsePauliOp
 from qiskit_optimization.algorithms import MinimumEigenOptimizer
+from qiskit_optimization.converters import QuadraticProgramToQubo
 from qiskit_algorithms import QAOA, NumPyMinimumEigensolver
 from qiskit_algorithms.optimizers import COBYLA
 
 from config import QAOA_REPS, QAOA_MAXITER
 
+_converter = QuadraticProgramToQubo()
 
-def solve_classical(qubo):
-    """Resolve o QUBO via NumPyMinimumEigensolver (solver exato clássico).
+def _to_qubo(qp):
+    """Converte QuadraticProgram para QUBO."""
+    return _converter.convert(qp)
 
-    Args:
-        qubo: Problema QUBO gerado por build_qubo().
-
-    Returns:
-        Tuple (resultado, tempo_segundos).
+def create_xy_mixer(n_qubits):
     """
+    Cria um Mixer XY (Parity-Preserving).
+    Implementa a soma de operadores (XX + YY) entre qubits vizinhos lineares.
+    Isso ajuda a manter o peso de Hamming (número de arestas ligadas).
+    """
+    ops = []
+    # Conectividade linear para o mixer (i -> i+1)
+    for i in range(n_qubits - 1):
+        # Termo XX
+        x_list = ["I"] * n_qubits
+        x_list[i] = "X"
+        x_list[i+1] = "X"
+        ops.append(("".join(x_list[::-1]), 0.5))
+        
+        # Termo YY
+        y_list = ["I"] * n_qubits
+        y_list[i] = "Y"
+        y_list[i+1] = "Y"
+        ops.append(("".join(y_list[::-1]), 0.5))
+        
+    return SparsePauliOp.from_list(ops)
+
+def solve_classical(qp):
+    """Resolve o problema via NumPyMinimumEigensolver (exato)."""
+    qubo   = _to_qubo(qp)
     solver = MinimumEigenOptimizer(NumPyMinimumEigensolver())
     t0     = time.time()
     result = solver.solve(qubo)
     return result, time.time() - t0
 
-
-def solve_qaoa(qubo, reps: int = QAOA_REPS, maxiter: int = QAOA_MAXITER):
-    """Resolve o QUBO usando o algoritmo QAOA variacional.
-
-    Utiliza StatevectorSampler (V2), compatível com qiskit-algorithms >= 0.3.
-    O sampler é criado localmente para evitar estado global entre chamadas.
-
-    Args:
-        qubo:    Problema QUBO gerado por build_qubo().
-        reps:    Número de camadas QAOA (padrão: QAOA_REPS de config.py).
-        maxiter: Iterações do otimizador COBYLA (padrão: QAOA_MAXITER).
-
-    Returns:
-        Tuple (resultado, tempo_segundos).
-
-    Nota de performance:
-        Para n >= 5 cidades, considere substituir StatevectorSampler por
-        AerSampler(method='matrix_product_state') — consome menos memória
-        pois não mantém o vetor de estado completo (2^n² amplitudes).
+def solve_qaoa(qp, reps: int = QAOA_REPS, maxiter: int = QAOA_MAXITER):
     """
+    Resolve o TSP usando QAOA com Mixer XY e StatevectorSampler (V2).
+    """
+    qubo      = _to_qubo(qp)
+    # CORREÇÃO: QuadraticProgram usa get_num_vars() ou len(variables)
+    n_qubits  = qubo.get_num_vars() 
+    
     sampler   = StatevectorSampler()
     optimizer = COBYLA(maxiter=maxiter)
-    qaoa      = QAOA(sampler=sampler, optimizer=optimizer, reps=reps)
+    
+    # Criando o Mixer customizado
+    mixer_op = create_xy_mixer(n_qubits)
+    
+    qaoa      = QAOA(sampler=sampler, 
+                     optimizer=optimizer, 
+                     reps=reps, 
+                     mixer=mixer_op)
+    
     solver    = MinimumEigenOptimizer(qaoa)
 
     t0     = time.time()
