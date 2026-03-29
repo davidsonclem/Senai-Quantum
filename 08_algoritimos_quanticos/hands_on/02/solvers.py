@@ -1,11 +1,11 @@
 # =============================================================================
 # UNIVERSIDADE SENAI CIMATEC — Hands-On 02: QAOA para TSP
-# solvers.py — Solvers atualizados com Mixer XY para preservação de Hamming
+# solvers.py — Versão Otimizada para Google Colab (AerSampler + MPS)
 # =============================================================================
 
 import time
 import numpy as np
-from qiskit.primitives import StatevectorSampler
+from qiskit_aer.primitives import Sampler as AerSampler  # Otimizado para RAM
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_optimization.algorithms import MinimumEigenOptimizer
 from qiskit_optimization.converters import QuadraticProgramToQubo
@@ -24,10 +24,8 @@ def create_xy_mixer(n_qubits):
     """
     Cria um Mixer XY (Parity-Preserving).
     Implementa a soma de operadores (XX + YY) entre qubits vizinhos lineares.
-    Isso ajuda a manter o peso de Hamming (número de arestas ligadas).
     """
     ops = []
-    # Conectividade linear para o mixer (i -> i+1)
     for i in range(n_qubits - 1):
         # Termo XX
         x_list = ["I"] * n_qubits
@@ -53,17 +51,17 @@ def solve_classical(qp):
 
 def solve_qaoa(qp, reps: int = QAOA_REPS, maxiter: int = QAOA_MAXITER):
     """
-    Resolve o TSP usando QAOA com Mixer XY e StatevectorSampler (V2).
+    Resolve o TSP usando QAOA com Mixer XY e AerSampler (Otimizado).
+    O método 'matrix_product_state' evita o estouro de memória no Colab.
     """
     qubo      = _to_qubo(qp)
-    # CORREÇÃO: QuadraticProgram usa get_num_vars() ou len(variables)
     n_qubits  = qubo.get_num_vars() 
     
-    sampler   = StatevectorSampler()
-    optimizer = COBYLA(maxiter=maxiter)
+    # AJUSTE PARA COLAB: Usando AerSampler com compressão de estado (MPS)
+    sampler = AerSampler(run_options={"method": "matrix_product_state"})
     
-    # Criando o Mixer customizado
-    mixer_op = create_xy_mixer(n_qubits)
+    optimizer = COBYLA(maxiter=maxiter)
+    mixer_op  = create_xy_mixer(n_qubits)
     
     qaoa      = QAOA(sampler=sampler, 
                      optimizer=optimizer, 
