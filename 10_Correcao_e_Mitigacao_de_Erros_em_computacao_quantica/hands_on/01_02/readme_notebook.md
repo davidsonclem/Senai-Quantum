@@ -21,7 +21,7 @@ senai-quantum/
 └── 10_Correcao_e_Mitigacao_de_Erros_em_computacao_quantica/
     └── hands_on/
         └── 01_02/
-            └── README.md
+            └── readme_notebook.md
 ```
 
 ---
