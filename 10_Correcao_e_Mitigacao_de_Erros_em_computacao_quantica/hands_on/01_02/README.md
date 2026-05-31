@@ -31,8 +31,3 @@ senai-quantum/
 - **Qiskit** - Framework de computação quântica
 - **Google Colab** - Ambiente de execução
 - **Python 3.8+**
-
----
-
-**Autor:** Davidson Clement  
-**Data:** 2026
