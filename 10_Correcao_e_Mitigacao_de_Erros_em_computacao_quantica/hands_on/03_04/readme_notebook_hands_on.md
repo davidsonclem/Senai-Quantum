@@ -4,9 +4,9 @@ Repositório de estudos sobre computação quântica com foco em correção e mi
 
 ---
 
-## 📖 Hands-On 1 - Código de Shor
+## 📖 Hands-On 2 - Computação Quântica Tolerante a Falhas
 
-**Implementação prática do código de Shor para correção de erros quânticos.**
+**Implementar operações tolerantes a falhas em qubits lógicos codificados, investigar o comportamento de portas transversais de Clifford, construir circuitos de extração de síndrome e avaliar o impacto da redundância de medições frente a ruído..**
 
 ### 🚀 Acessar Notebook
 
